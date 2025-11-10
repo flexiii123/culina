@@ -1,0 +1,8 @@
+# Konfigurationsdatei mit Passwörtern
+config.php
+
+# Ordner für VS Code Einstellungen
+.vscode/
+
+# Ordner für hochgeladene Benutzer-Dateien
+/public/uploads/
