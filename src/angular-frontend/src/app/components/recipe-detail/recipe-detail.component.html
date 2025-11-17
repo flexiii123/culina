@@ -1,0 +1,192 @@
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Back Button -->
+  <button 
+    (click)="onBackClick()"
+    class="flex items-center gap-2 text-orange-600 hover:text-orange-700 mb-6">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    </svg>
+    <span>Zurück zur Übersicht</span>
+  </button>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="animate-pulse">
+    <div class="h-64 bg-gray-300 rounded-lg mb-6"></div>
+    <div class="h-8 bg-gray-300 rounded mb-4"></div>
+    <div class="h-4 bg-gray-300 rounded mb-2"></div>
+    <div class="h-4 bg-gray-300 rounded w-2/3"></div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <p class="text-red-800">{{ error }}</p>
+  </div>
+
+  <!-- Recipe Content -->
+  <div *ngIf="!loading && recipe" class="bg-white rounded-lg shadow-lg overflow-hidden">
+    <!-- Hero Image -->
+    <div class="relative h-96">
+      <img [src]="recipe.image" [alt]="recipe.title" class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+      <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
+        <h1 class="text-4xl mb-2">{{ recipe.title }}</h1>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <img [src]="recipe.authorAvatar" [alt]="recipe.author" class="w-10 h-10 rounded-full border-2 border-white">
+            <span>{{ recipe.author }}</span>
+          </div>
+          <span [ngClass]="getDifficultyColor(recipe.difficulty)" 
+                class="px-3 py-1 rounded-full text-xs">
+            {{ recipe.difficulty }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-8">
+      <!-- Description & Meta -->
+      <div class="mb-8">
+        <p class="text-gray-700 mb-4">{{ recipe.description }}</p>
+        <div class="flex items-center gap-6 text-gray-600">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>{{ recipe.cookTime }}</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <svg 
+              *ngFor="let filled of getStarArray(recipe.averageRating)"
+              class="w-5 h-5" 
+              [ngClass]="filled ? 'text-yellow-400' : 'text-gray-300'"
+              fill="currentColor" 
+              viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+            </svg>
+            <span class="ml-1">{{ recipe.averageRating }} ({{ recipe.ratings.length }} Bewertungen)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ingredients -->
+      <div class="mb-8">
+        <h2 class="text-2xl text-gray-900 mb-4">Zutaten</h2>
+        <ul class="space-y-2">
+          <li *ngFor="let ingredient of recipe.ingredients" class="flex items-start gap-2">
+            <svg class="w-5 h-5 text-orange-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-gray-700">{{ ingredient }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Instructions -->
+      <div class="mb-8">
+        <h2 class="text-2xl text-gray-900 mb-4">Zubereitung</h2>
+        <ol class="space-y-4">
+          <li *ngFor="let instruction of recipe.instructions; let i = index" class="flex gap-4">
+            <span class="flex-shrink-0 w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center">
+              {{ i + 1 }}
+            </span>
+            <p class="text-gray-700 pt-1">{{ instruction }}</p>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Ratings Section -->
+      <div class="border-t border-gray-200 pt-8">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl text-gray-900">Bewertungen</h2>
+          <button 
+            (click)="onAddRatingClick()"
+            *ngIf="!showRatingForm"
+            class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+            Bewertung hinzufügen
+          </button>
+        </div>
+
+        <!-- Rating Form -->
+        <div *ngIf="showRatingForm" class="bg-gray-50 rounded-lg p-6 mb-6">
+          <h3 class="text-lg mb-4">Deine Bewertung</h3>
+          
+          <!-- Star Selection -->
+          <div class="flex gap-2 mb-4">
+            <button 
+              *ngFor="let star of getRatingStarArray()"
+              (click)="setRating(star)"
+              type="button"
+              class="focus:outline-none">
+              <svg 
+                class="w-8 h-8 transition-colors" 
+                [ngClass]="star <= selectedRating ? 'text-yellow-400' : 'text-gray-300'"
+                fill="currentColor" 
+                viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Comment -->
+          <textarea
+            [(ngModel)]="ratingComment"
+            placeholder="Kommentar (optional)"
+            rows="3"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent mb-4">
+          </textarea>
+
+          <!-- Buttons -->
+          <div class="flex gap-2">
+            <button 
+              (click)="submitRating()"
+              [disabled]="submittingRating || selectedRating === 0"
+              class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors">
+              {{ submittingRating ? 'Wird gesendet...' : 'Bewertung abgeben' }}
+            </button>
+            <button 
+              (click)="cancelRating()"
+              [disabled]="submittingRating"
+              class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+              Abbrechen
+            </button>
+          </div>
+        </div>
+
+        <!-- Ratings List -->
+        <div class="space-y-6">
+          <div *ngFor="let rating of recipe.ratings" class="border-b border-gray-100 pb-6 last:border-0">
+            <div class="flex items-start gap-4">
+              <img [src]="rating.userAvatar" [alt]="rating.userName" class="w-12 h-12 rounded-full">
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <p class="font-medium text-gray-900">{{ rating.userName }}</p>
+                    <div class="flex items-center gap-2">
+                      <div class="flex">
+                        <svg 
+                          *ngFor="let filled of getStarArray(rating.rating)"
+                          class="w-4 h-4" 
+                          [ngClass]="filled ? 'text-yellow-400' : 'text-gray-300'"
+                          fill="currentColor" 
+                          viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                        </svg>
+                      </div>
+                      <span class="text-sm text-gray-500">{{ formatDate(rating.createdAt) }}</span>
+                    </div>
+                  </div>
+                </div>
+                <p *ngIf="rating.comment" class="text-gray-700">{{ rating.comment }}</p>
+              </div>
+            </div>
+          </div>
+
+          <p *ngIf="recipe.ratings.length === 0" class="text-gray-500 text-center py-8">
+            Noch keine Bewertungen vorhanden. Sei der Erste, der dieses Rezept bewertet!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

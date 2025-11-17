@@ -1,0 +1,183 @@
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white rounded-lg shadow-lg p-8">
+    <h2 class="text-3xl text-gray-900 mb-8">Neues Rezept hochladen</h2>
+
+    <form (ngSubmit)="onSubmit()">
+      <!-- Titel -->
+      <div class="mb-6">
+        <label class="block text-sm text-gray-700 mb-2">Titel *</label>
+        <input
+          type="text"
+          [(ngModel)]="title"
+          name="title"
+          required
+          placeholder="z.B. Pasta Carbonara"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+      </div>
+
+      <!-- Beschreibung -->
+      <div class="mb-6">
+        <label class="block text-sm text-gray-700 mb-2">Beschreibung *</label>
+        <textarea
+          [(ngModel)]="description"
+          name="description"
+          required
+          rows="3"
+          placeholder="Kurze Beschreibung des Rezepts"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+        </textarea>
+      </div>
+
+      <!-- Kochzeit & Schwierigkeit -->
+      <div class="grid grid-cols-2 gap-6 mb-6">
+        <div>
+          <label class="block text-sm text-gray-700 mb-2">Kochzeit *</label>
+          <input
+            type="text"
+            [(ngModel)]="cookTime"
+            name="cookTime"
+            required
+            placeholder="z.B. 30 Min"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-700 mb-2">Schwierigkeit *</label>
+          <select
+            [(ngModel)]="difficulty"
+            name="difficulty"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+            <option value="Einfach">Einfach</option>
+            <option value="Mittel">Mittel</option>
+            <option value="Schwer">Schwer</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Bild-Upload -->
+      <div class="mb-6">
+        <label class="block text-sm text-gray-700 mb-2">Bild *</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+          <input
+            type="file"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            class="hidden"
+            #fileInput>
+          
+          <div *ngIf="!previewUrl">
+            <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+              </path>
+            </svg>
+            <button
+              type="button"
+              (click)="fileInput.click()"
+              class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
+              Bild auswählen
+            </button>
+          </div>
+
+          <div *ngIf="previewUrl" class="relative">
+            <img [src]="previewUrl" alt="Vorschau" class="max-h-64 mx-auto rounded-lg">
+            <button
+              type="button"
+              (click)="previewUrl = null; selectedFile = null"
+              class="absolute top-2 right-2 bg-red-600 text-white rounded-full p-2 hover:bg-red-700">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zutaten -->
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-2">
+          <label class="block text-sm text-gray-700">Zutaten *</label>
+          <button
+            type="button"
+            (click)="addIngredient()"
+            class="text-sm text-orange-600 hover:text-orange-700">
+            + Zutat hinzufügen
+          </button>
+        </div>
+        <div class="space-y-2">
+          <div *ngFor="let ingredient of ingredients; let i = index" class="flex gap-2">
+            <input
+              type="text"
+              [value]="ingredient"
+              (input)="updateIngredient(i, $any($event.target).value)"
+              placeholder="z.B. 400g Spaghetti"
+              class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+            <button
+              type="button"
+              (click)="removeIngredient(i)"
+              [disabled]="ingredients.length === 1"
+              class="px-3 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Anweisungen -->
+      <div class="mb-8">
+        <div class="flex justify-between items-center mb-2">
+          <label class="block text-sm text-gray-700">Zubereitungsschritte *</label>
+          <button
+            type="button"
+            (click)="addInstruction()"
+            class="text-sm text-orange-600 hover:text-orange-700">
+            + Schritt hinzufügen
+          </button>
+        </div>
+        <div class="space-y-2">
+          <div *ngFor="let instruction of instructions; let i = index" class="flex gap-2">
+            <span class="flex-shrink-0 w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center mt-2">
+              {{ i + 1 }}
+            </span>
+            <textarea
+              [value]="instruction"
+              (input)="updateInstruction(i, $any($event.target).value)"
+              rows="2"
+              placeholder="Beschreibe diesen Zubereitungsschritt"
+              class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+            </textarea>
+            <button
+              type="button"
+              (click)="removeInstruction(i)"
+              [disabled]="instructions.length === 1"
+              class="px-3 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed self-start mt-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex gap-4">
+        <button
+          type="submit"
+          [disabled]="submitting"
+          class="flex-1 px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors">
+          {{ submitting ? 'Wird hochgeladen...' : 'Rezept veröffentlichen' }}
+        </button>
+        <button
+          type="button"
+          (click)="onCancel()"
+          [disabled]="submitting"
+          class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+          Abbrechen
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header Component -->
+  <app-header 
+    [currentView]="currentView"
+    (uploadClick)="onUploadClick()"
+    (homeClick)="onBackToHome()"
+    (loginClick)="openLogin()"
+    (logoutClick)="logout()">
+  </app-header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Home View - Recipe Grid -->
+    <app-recipe-grid 
+      *ngIf="currentView === 'home'"
+      (recipeClick)="onRecipeClick($event)">
+    </app-recipe-grid>
+
+    <!-- Detail View -->
+    <app-recipe-detail 
+      *ngIf="currentView === 'detail' && selectedRecipeId"
+      [recipeId]="selectedRecipeId"
+      (backClick)="onBackToHome()">
+    </app-recipe-detail>
+
+    <!-- Upload View -->
+    <app-upload-recipe 
+      *ngIf="currentView === 'upload'"
+      (recipeUploaded)="onRecipeUploaded()"
+      (cancelClick)="onBackToHome()">
+    </app-upload-recipe>
+  </main>
+
+  <!-- Login Dialog -->
+  <app-login-dialog
+    *ngIf="showLoginDialog"
+    (close)="closeDialogs()"
+    (loginSuccess)="onLoginSuccess()"
+    (switchToRegister)="openRegister()">
+  </app-login-dialog>
+
+  <!-- Register Dialog -->
+  <app-register-dialog
+    *ngIf="showRegisterDialog"
+    (close)="closeDialogs()"
+    (registerSuccess)="onLoginSuccess()"
+    (switchToLogin)="openLogin()">
+  </app-register-dialog>
+</div>

@@ -1,0 +1,48 @@
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo -->
+      <div class="flex items-center cursor-pointer" (click)="onHomeClick()">
+        <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+          </path>
+        </svg>
+        <h1 class="ml-2 text-2xl text-gray-900">Culina</h1>
+      </div>
+
+      <!-- Navigation -->
+      <div class="flex items-center gap-4">
+        <button 
+          (click)="onUploadClick()"
+          class="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          <span>Rezept hochladen</span>
+        </button>
+
+        <!-- User Menu -->
+        <div *ngIf="currentUser; else loginButton">
+          <div class="flex items-center gap-3">
+            <img [src]="currentUser.avatar" [alt]="currentUser.name" class="w-10 h-10 rounded-full">
+            <div class="flex flex-col">
+              <span class="text-sm">{{ currentUser.name }}</span>
+              <button (click)="onLogoutClick()" class="text-xs text-orange-600 hover:text-orange-700 text-left">
+                Abmelden
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #loginButton>
+          <button 
+            (click)="onLoginClick()"
+            class="px-4 py-2 text-orange-600 border border-orange-600 rounded-lg hover:bg-orange-50 transition-colors">
+            Anmelden
+          </button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</header>
