@@ -106,7 +106,7 @@
           </button>
         </div>
         <div class="space-y-2">
-          <div *ngFor="let ingredient of ingredients; let i = index" class="flex gap-2">
+          <div *ngFor="let ingredient of ingredients; let i = index; trackBy: trackByIndex" class="flex gap-2">
             <input
               type="text"
               [value]="ingredient"
@@ -138,8 +138,7 @@
           </button>
         </div>
         <div class="space-y-2">
-          <div *ngFor="let instruction of instructions; let i = index" class="flex gap-2">
-            <span class="flex-shrink-0 w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center mt-2">
+          <div *ngFor="let instruction of instructions; let i = index; trackBy: trackByIndex" class="flex gap-2">            <span class="flex-shrink-0 w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center mt-2">
               {{ i + 1 }}
             </span>
             <textarea

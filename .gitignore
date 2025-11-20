@@ -6,3 +6,6 @@ config.php
 
 # Ordner für hochgeladene Benutzer-Dateien
 /public/uploads/
+
+# Angular dependencies
+/src/angular-frontend/node_modules/

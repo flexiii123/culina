@@ -14,6 +14,8 @@ export class RecipeGridComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
+  backendUrl = 'http://localhost:8000';
+  
   constructor(private recipeService: RecipeService) {}
 
   ngOnInit() {

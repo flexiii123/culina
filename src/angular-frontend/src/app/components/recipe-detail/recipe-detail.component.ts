@@ -12,6 +12,8 @@ export class RecipeDetailComponent implements OnInit {
   @Input() recipeId!: number;
   @Output() backClick = new EventEmitter<void>();
 
+  readonly backendUrl = 'http://localhost:8000';
+
   recipe: RecipeDetail | null = null;
   loading = true;
   error: string | null = null;

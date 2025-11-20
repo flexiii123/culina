@@ -26,7 +26,7 @@
   <div *ngIf="!loading && recipe" class="bg-white rounded-lg shadow-lg overflow-hidden">
     <!-- Hero Image -->
     <div class="relative h-96">
-      <img [src]="recipe.image" [alt]="recipe.title" class="w-full h-full object-cover">
+      <img [src]="backendUrl + '/' + recipe.image">
       <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
       <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
         <h1 class="text-4xl mb-2">{{ recipe.title }}</h1>

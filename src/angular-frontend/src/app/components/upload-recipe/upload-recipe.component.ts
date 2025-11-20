@@ -64,6 +64,11 @@ export class UploadRecipeComponent {
     this.instructions[index] = value;
   }
 
+  // Funktion, um die Eingabefelder korrekt zu verfolgen und den Fokus zu behalten
+  trackByIndex(index: number, item: any): number {
+  return index;
+  }
+
   onSubmit() {
     // Validierung
     if (!this.title || !this.description || !this.cookTime || !this.selectedFile) {
